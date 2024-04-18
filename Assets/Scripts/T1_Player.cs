@@ -6,26 +6,44 @@ public class T1_Player : MonoBehaviour
 {
     [SerializeField] private float JUmpForce;
     [SerializeField] public Sprite jumpSprite;
+    [SerializeField] public Sprite idleSprite;
 
-    [SerializeField] private bool debugGC;
+    [Tooltip("You found me! Now turn me off!!!")]
+    [SerializeField] private bool _debugGC = true;
 
     private List<Collider2D> myColliders = new List<Collider2D>();
     void Update()
     {
         var rig = GetComponent<Rigidbody2D>();
         var sprite = GetComponent<SpriteRenderer>();
-        DoStuf(5);
+        Jump(5);
 
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
-            DoStuf(100);
+            StopAllCoroutines();
+            StartCoroutine(backToIdllle());
+            Jump(25);
+
+
+
+
+
+
+
+
             rig.AddForce(Vector2.up * JUmpForce);
             sprite.sprite = jumpSprite;
         }
     }
-    public void DoStuf(int stufCounter)
+    IEnumerator backToIdllle()
     {
-        if (!debugGC) return;
+        yield return new WaitForSeconds(1);
+        var sprite = GetComponent<SpriteRenderer>();
+        sprite.sprite = idleSprite;
+    }
+    public void Jump(int stufCounter)
+    {
+        if (!_debugGC) return;
         double i = 0;
         while (i < stufCounter)
         {
